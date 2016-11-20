@@ -17,6 +17,10 @@ let storiesSchema = new Schema({
   },
   authorAva: {
     type: String,
+  },
+  slug: {
+    type: String,
+    required: true
   }
 },
 {

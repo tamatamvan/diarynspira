@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Diarynspira - Share your stories . . .</title>
+    <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css" media="screen" title="no title">
+  </head>
+  <body>
+  <div id='app'>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+            Diarynspira
+          </a>
+        </div>
+
+        <div class="navbar-form navbar-right">
+          <div v-if='!authenticated' class="form-group">
+            <button type="button" class="btn btn-info" name="authBtn" data-target="#authModal" data-toggle="modal"><i class="glyphicon glyphicon-user"></i> Sign Up/In</button>
+          </div>
+          <div v-if='authenticated' class="form-group">
+            <button type="button" class="btn btn-info" v-on:click="logout"><i class="glyphicon glyphicon-user"></i> Log Out</button>
+          </div>
+        </div>
+      </div>
+      <div class="clearfix">
+
+      </div>
+    </nav>
+
+    <!-- Half Page Image Background Carousel Header -->
+    <!-- <header id="myCarousel" class="carousel slide"> -->
+        <!-- Indicators -->
+        <!-- <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+        </ol> -->
+
+        <!-- Wrapper for Slides -->
+        <!-- <div class="carousel-inner">
+            <div class="item active"> -->
+                <!-- Set the second background image using inline CSS below. -->
+                <!-- <div class="fill" style="background-image:url('https://images.pexels.com/photos/2324/skyline-buildings-new-york-skyscrapers.jpg?w=1260&h=750&auto=compress&cs=tinysrgb');"></div>
+                <div class="carousel-caption">
+                    <h1>Share your stories!</h1>
+                </div>
+            </div>
+            <div class="item"> -->
+                <!-- Set the third background image using inline CSS below. -->
+                <!-- <div class="fill" style="background-image:url('https://images.pexels.com/photos/26890/pexels-photo-26890.jpg?w=1260&h=750&auto=compress&cs=tinysrgb');"></div>
+                <div class="carousel-caption">
+                    <h1>Spread love and inspiration!</h1>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Controls -->
+        <!-- <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+
+    </header> -->
+    <br>
+    <div class="container">
+      <div class="jumbotron text-center">
+        <h2>Diarynspira</h2>
+        <p>
+          Share your stories, spread love and inspiration!
+        </p>
+      </div>
+      <div v-if='auth_failed' class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert" v-on:click='falseauthfailed'>&times;</button>
+        <strong>Oh snap!</strong> You've entered wrong password or username!
+      </div>
+      <div v-if='regstat' class="alert alert-success alert-dismissable">
+        <button type="button" class="close" data-dismiss="alert" v-on:click='falseregstat'>&times;</button>
+        <strong>Hurray!</strong> Your regisration was success!
+      </div>
+    </div>
+    <div class="container">
+      <div class="well well-sm" v-if='authenticated'>
+        <div class="pull-right">
+          <button id="addNewBtn" type="button" class="btn btn-info" data-toggle="collapse" data-target="#addNewForm" aria-expanded="false" aria-controls="addNewForm">
+            <i class="glyphicon glyphicon-plus"></i>Add New
+          </button>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+
+      <!-- FORM ADD NEW HOUSE -->
+      <div class="collapse" id="addNewForm"  v-if='authenticated'>
+        <div class="well">
+          <h3>Add New Story</h3>
+          <div class="form-group">
+            <label class="control-label" for="title">Title</label>
+            <input class="form-control" type="text" name="title" v-model="title" placeholder="Enter the title of your story">
+          </div>
+          <div class="form-group">
+            <label class="control-label" for="content">Your story</label>
+            <textarea class="form-control" v-model="content" placeholder="Enter the your story" required></textarea>
+          </div>
+          <div class="form-group">
+            <button type="button" name="button" class="btn btn-info" v-on:click="postNewStory" data-toggle="collapse" data-target="#addNewForm" aria-expanded="false" aria-controls="addNewForm">Submit <i class="glyphicon glyphicon-send"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SINGLE HOUSE -->
+      <!-- <div v-for="story in stories" v-bind:id="'story_'+story._id" class="panel panel-default">
+        <div class="panel-body">
+          <button v-if='authenticated' type="button" class="close" data-toggle="modal" v-bind:data-target="'#deleteStory_'+story._id"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></button>
+
+          <div class="col-md-2">
+            <img v-bind:src="story.authorAva" class="img-responsive" alt="" />
+          </div>
+          <div class="col-md-9">
+            <h3 class="h-title">{{story.title}} - by : {{story.author}}</h3>
+            <p class="text-muted">Posted On : {{story.createdAt}}</p>
+            <p>
+              {{story.content}}
+            </p>
+          </div>
+        </div>
+      </div> -->
+      <!-- SINGLE HOUSE -->
+
+      <!-- SINGLE HOUSE -->
+      <div v-for="story in stories" v-bind:id="'story_'+story._id" class="panel panel-default">
+        <div class="panel-body">
+          <div class="col-md-1">
+            <img v-bind:src="story.authorAva" class="img-responsive" alt="" />
+          </div>
+          <div class="col-md-11">
+            <h3 class="h-title">{{story.title}} - by: {{story.author}}</h3>
+            <p class="text-muted">Posted On : {{story.createdAt}}</p>
+
+            <a data-toggle="collapse" v-bind:data-target="'#detailStory_'+story._id" aria-expanded="false" v-bind:aria-controls="'detailStory_'+story._id">See More</a>
+            <div v-bind:id="'detailStory_'+story._id" class="collapse">
+              <p>
+                {{story.content}}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="panel-footer" v-if="story.author == ses_username">
+          <div class="pull-right">
+            <button v-on:click.prevent="setmodeledit(story.slug)" type="button" name="button" class="btn btn-sm btn-success" data-toggle="modal" v-bind:data-target="'#editStory_'+story._id"><i class="glyphicon glyphicon-edit"></i> Edit</button>
+            <button type="button" name="button" class="btn btn-sm btn-danger" data-toggle="modal" v-bind:data-target="'#deleteStory_'+story._id"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <!-- SINGLE HOUSE -->
+
+      <!-- EDIT HOUSE -->
+      <div v-for="story in stories" class="modal fade" v-bind:id="'editStory_'+story._id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Edit Story</h4>
+            </div>
+            <div class="modal-body">
+              <form id="editStoryForm">
+                <div class="form-group">
+                  <label class="control-label" for="title">Title</label>
+                  <input class="form-control" type="text" name="edittitle" v-model="edittitle" placeholder="Enter the title of your story" required>
+                </div>
+                <div class="form-group">
+                  <label class="control-label" for="content">Your story</label>
+                  <textarea class="form-control" v-model="editcontent" placeholder="Enter the your story" required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-sm btn-info" v-on:click.prevent="updateStory(story._id)" data-dismiss="modal">Save changes <i class="glyphicon glyphicon-edit"></i></button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- EDIT HOUSE -->
+
+      <div class="modal fade" id="authModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Sign Up / Sign In</h4>
+            </div>
+            <div class="modal-body">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#signup" data-toggle="tab">Sign Up</a></li>
+                <li><a href="#signin" data-toggle="tab">Sign In</a></li>
+              </ul>
+              <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade active in" id="signup">
+                  <div class="form-group" style="padding-left:0px">
+                    <label class="control-label" for="name">Name</label>
+                    <input class="form-control" v-model="name" type="text" placeholder="Enter the your name" required>
+                  </div>
+                  <div class="form-group" style="padding-left:0px">
+                    <label class="control-label" for="email">Email</label>
+                    <input class="form-control" v-model="email" type="emailRegister" placeholder="Enter the email" required>
+                  </div>
+                  <div class="form-group" style="padding-left:0px">
+                    <label class="control-label" for="username">Username</label>
+                    <input class="form-control" v-model="username" type="text" placeholder="Enter the your username" required>
+                  </div>
+                  <div class="form-group" style="padding-left:0px">
+                    <label class="control-label" for="password">Password</label>
+                    <input class="form-control" v-model="password" type="password" placeholder="Enter the password" required>
+                  </div>
+                  <div class="form-group" style="padding-left:0px">
+                    <label class="control-label" for="ava">Avatar URL</label>
+                    <input class="form-control" v-model="ava" type="text" placeholder="Enter the your avatar_url" required>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" name="button" class="btn btn-info" v-on:click="register" data-dismiss="modal">Sign Up <i class="glyphicon glyphicon-log-in"></i></button>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="signin">
+                  <div class="form-group col-md-6" style="padding-left:0px">
+                    <label class="control-label" for="username">Username</label>
+                    <input class="form-control" v-model="username" type="text" placeholder="Enter the your username" required>
+                  </div>
+                  <div class="form-group col-md-6" style="padding-left:0px">
+                    <label class="control-label" for="password">Password</label>
+                    <input class="form-control" v-model="password" type="password" placeholder="Enter the password" required>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" name="button" class="btn btn-info" v-on:click="login" data-dismiss="modal">Sign In <i class="glyphicon glyphicon-log-in"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-for="story in stories" class="modal fade" v-bind:id="'deleteStory_'+story._id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  v-if='authenticated'>
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Delete your story</h4>
+            </div>
+            <div class="modal-body">
+              Are you sure want to delete this story?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-sm btn-danger"  v-on:click.prevent="deleteStory(story._id)" data-dismiss="modal">Delete <i class="glyphicon glyphicon-trash"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+    <script src="https://unpkg.com/vue@2.0.5/dist/vue.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="js/main.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js' integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' crossorigin='anonymous'></script>
+  </body>
+</html>

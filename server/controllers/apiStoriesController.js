@@ -3,11 +3,11 @@ const Stories = require('../models/Stories');
 const slug = require('slug');
 
 let getAllStories = (req, res, next) => {
-  Stories.find({}, (err, tweets) => {
+  Stories.find({}, (err, storie) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(tweets);
+      res.send(storie);
     }
   })
 }
@@ -27,11 +27,11 @@ let postNewStory = (req, res, next) => {
     author: req.body.author,
     authorAva: req.body.authorAva,
     slug: slug(req.body.title).toLowerCase()
-  }, (err, tweet) => {
+  }, (err, story) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(tweet)
+      res.send(story)
     }
   })
 }
@@ -41,11 +41,11 @@ let updateStory = (req, res, next) => {
     _id: req.params.id
   }, req.body, {
     new: true
-  }, (err, tweet) => {
+  }, (err, story) => {
     if (err) {
       console.log(err);
     } else {
-      res.send(tweet)
+      res.send(story)
     }
   })
 }

@@ -10,7 +10,7 @@ const Users = require('./models/Users');
 
 const routes = require('./routes/index');
 const auth = require('./routes/auth');
-const apiTweets = require('./routes/apiTweets');
+const apiStories = require('./routes/apiStories');
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
@@ -62,7 +62,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', routes);
-app.use('/api/story', apiStory);
+app.use('/api/stories', apiStories);
 app.use('/auth', auth);
 // app.use('/users', users);
 passport.serializeUser(Users.serializeUser());
